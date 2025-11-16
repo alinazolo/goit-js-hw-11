@@ -274,48 +274,40 @@
 
 // --- Импорт библиотек ---
 
-import SimpleLightbox from "simplelightbox";
-import "simplelightbox/dist/simple-lightbox.min.css";
-
 import iziToast from "izitoast";
 import "izitoast/dist/css/iziToast.min.css";
 
 // --- Импорт функций проекта ---
 
-import getImagesByQuery from "./pixabay-api.js"
+import getImagesByQuery from "./js/pixabay-api.js"
 
-import { createGallery, hideLoader, showLoader, clearGallery } from './render-functions.js';
+import { createGallery, clearGallery, hideLoader, showLoader  } from './js/render-functions.js';
 
 
 const form = document.querySelector(".form");
-const galleryList = document.querySelector(".gallery-list");
-// const loader = document.querySelector('.loader');
-
-// --- Инициализация SimpleLightbox ---
-let gallery = new SimpleLightbox('.gallery-list a', {
-  captions: true,
-  captionDelay: 250,
-});
 
 // --- Слушатель формы ---
 form.addEventListener("submit", handleSearch);
+let isLoading = false;
 
 // --- Функция обработки запроса ---
 function handleSearch(event) {
     event.preventDefault();
+    clearGallery();
     const form = event.currentTarget;
     const queryValue = form.elements.search.value.trim().toLowerCase();
 
       if (!queryValue) {
 iziToast.warning({
       title: "Warning",
-      message: "Введите запрос!",
+      message: "Write your request",
       position: "topRight",
     });
+    form.reset();
     return;
   }
 
-clearGallery();
+isLoading = true;
 showLoader();
 
 getImagesByQuery(queryValue)
@@ -331,12 +323,11 @@ if (images.length === 0) {
 }
 
 createGallery(images);
-gallery.refresh();
 }) 
 
 .catch(error => console.log("Ошибка запроса:", error))
 .finally(() => {
-     hideLoader(); // ← здесь!  скрываем лоадер в любом случа
+     hideLoader(); // скрываем лоадер
     form.reset(); // ← и сбрасываем форму
 })
 }

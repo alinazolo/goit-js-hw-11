@@ -1,4 +1,7 @@
-const galleryList = document.querySelector(".gallery-list");
+import SimpleLightbox from "simplelightbox";
+import "simplelightbox/dist/simple-lightbox.min.css";
+
+const galleryList = document.querySelector(".gallery");
 const loader = document.querySelector(".loader");
 
 // Показать лоадер
@@ -9,6 +12,19 @@ function showLoader() {
 // Скрыть лоадер
 function hideLoader() {
     loader.classList.add('hidden');
+}
+
+// --- Инициализация SimpleLightbox ---
+let galleryInstance = null;
+function ensureLightbox() {
+  if(!galleryInstance) {
+    galleryInstance = new SimpleLightbox('.gallery a', {
+  captions: true,
+  captionDelay: 250,
+});
+  } else {
+        galleryInstance.refresh();
+  }
 }
 
 // Создать разметку галереи
@@ -36,11 +52,16 @@ function createGallery(images) {
     .join('');
 
   galleryList.insertAdjacentHTML('beforeend', markup);
+  queueMicrotask(ensureLightbox);
 }
 
 function clearGallery() {
   galleryList.innerHTML = '';
+    if (galleryInstance) {
+    galleryInstance.destroy();
+    galleryInstance = null;
+    }
 }
 
 // Экспорт функций
-export { createGallery, hideLoader, showLoader, clearGallery };
+export { hideLoader, showLoader, createGallery, clearGallery };
