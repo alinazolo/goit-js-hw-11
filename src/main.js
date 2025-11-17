@@ -328,6 +328,6 @@ createGallery(images);
 .catch(error => console.log("Ошибка запроса:", error))
 .finally(() => {
      hideLoader(); // скрываем лоадер
-    form.reset(); // ← и сбрасываем форму
+    form.reset(); // сбрасываем форму
 })
 }
