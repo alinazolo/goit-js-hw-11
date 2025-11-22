@@ -1,20 +1,36 @@
 import axios from 'axios';
 
+const server = axios.create({
+    baseURL: 'https://pixabay.com/api/',
+    params: {
+    key: "52901164-552010a54c9c54893e8a3cd4c",
+    image_type: "photo",
+    orientation: "horizontal",
+    safesearch: true,
+    },
+});
+
 function getImagesByQuery(query) {
-    const URL = "https://pixabay.com/api/";
-    const API_KEY = "52901164-552010a54c9c54893e8a3cd4c";
-
-    const params = new URLSearchParams({
-        key: API_KEY,
-        q: query,
-        image_type: "photo",
-        orientation: "horizontal",
-        safesearch: true,
+    return server.get("/", {
+        params: {
+            q: query,
+        },
     });
-
-      // Возвращаем Promise — .then и .catch будут в main.js
-return axios.get(`${URL}?${params}`)
 }
+    // const URL = "https://pixabay.com/api/";
+    // const API_KEY = "52901164-552010a54c9c54893e8a3cd4c";
+
+    // const params = new URLSearchParams({
+    //     key: API_KEY,
+    //     q: query,
+    //     image_type: "photo",
+    //     orientation: "horizontal",
+    //     safesearch: true,
+//     });
+
+//       // Возвращаем Promise — .then и .catch будут в main.js
+// return axios.get(`${URL}?${params}`)
+// }
 
 export default getImagesByQuery;
 
